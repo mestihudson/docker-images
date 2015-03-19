@@ -1,4 +1,4 @@
 all: build
 
 build:
-	docker build -t fcoelho/389-ds --rm .
+	docker build -t ldap-sinesp --rm .

@@ -63,31 +63,31 @@ function fix_permissions {
 
 function setup_389_server {
 	# restore the backup, volumes are now running
-	rm -rf /etc/dirsrv/*
-	mv /backup/etc-dirsrv/* /etc/dirsrv
+	#rm -rf /etc/dirsrv/*
+	#mv /backup/etc-dirsrv/* /etc/dirsrv
 
-	rm -rf /usr/share/dirsrv/*
-	mv /backup/usr-share-dirsrv/* /usr/share/dirsrv
+	#rm -rf /usr/share/dirsrv/*
+	#mv /backup/usr-share-dirsrv/* /usr/share/dirsrv
 
-	rm -rf /backup
+	#rm -rf /backup
 
 	generate_new_password
 	replace_environment /tmp/ds-setup.inf
 
 	setup-ds-admin.pl --silent --file /tmp/ds-setup.inf
-	setup-ds-dsgw
+	#setup-ds-admin.pl --file /tmp/ds-setup.inf
+	#setup-ds-dsgw
 
 	# setup-ds-admin.pl automatically starts these services, but we'll
 	# control them from supervisord. TODO if someone knows a way to _not_
 	# start the services after setup-ds-admin.pl, I'm interested in it
-	service dirsrv stop
-	service dirsrv-admin stop
+	#service dirsrv stop
+	#service dirsrv-admin stop
 }
-	
-fix_permissions
+
+#fix_permissions
 
 test -d /etc/dirsrv/slapd-${SERVER_IDENTIFIER} || setup_389_server
 
-replace_environment /etc/supervisord.conf
-/opt/python27/bin/supervisord -c /etc/supervisord.conf
-
+#replace_environment /etc/supervisord.conf
+#/opt/python27/bin/supervisord -c /etc/supervisord.conf

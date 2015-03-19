@@ -1,21 +1,14 @@
 FROM centos
 
+RUN yum -y update && yum clean all
+#RUN yum -y remove fakesystemd && yum clean all
+#RUN yum -y install systemd && yum clean all
 RUN yum install -y epel-release
-RUN yum install -y 389-ds-base 389-admin net-tools telnet && yum clean all
-# We backup dirsrv directories because volumes will replace them when the
-# container is started. During the first run, this will be copied back to the
-# correct location to populate the volumes
-RUN mkdir /backup && cp -r /etc/dirsrv /backup/etc-dirsrv && cp -r /usr/share/dirsrv /backup/usr-share-dirsrv
+RUN yum install -y 389-ds-base 389-admin && yum clean all
 
-ADD ds-setup.inf /tmp/ds-setup.inf
 ADD run.sh /run.sh
-ADD supervisord.conf /etc/supervisord.conf
-
-VOLUME ["/var/lib/dirsrv", "/etc/dirsrv", "/var/log/dirsrv", "/var/lock/dirsrv", "/usr/share/dirsrv"]
+ADD ds-setup.inf /tmp/ds-setup.inf
 
 EXPOSE 389 9830
 
 CMD ["/run.sh"]
-
-#/usr/sbin/ns-slapd -D /etc/dirsrv/slapd-ldap -i /var/run/dirsrv/slapd-ldap.pid -w /var/run/dirsrv/slapd-ldap.startpid
-#/usr/sbin/httpd.worker -k start -f /etc/dirsrv/admin-serv/httpd.conf
